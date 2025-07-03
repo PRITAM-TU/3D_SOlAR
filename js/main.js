@@ -217,7 +217,245 @@ function createRing(innerRadius) {
   mesh.rotation.x = Math.PI / 2;
   return mesh;
 }
+// Add this after your existing loading screen code but before the init() function
 
+// Speed Control Panel
+const controlPanel = document.createElement('div');
+controlPanel.id = 'control-panel';
+controlPanel.innerHTML = `
+  <div class="control-panel">
+    <h2>Planet Speed Controls</h2>
+    <div class="control-group">
+      <label for="mercury-speed">Mercury:</label>
+      <input type="range" id="mercury-speed" min="0.1" max="5" step="0.1" value="${mercury_revolution_speed}">
+      <span class="speed-value">${mercury_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="venus-speed">Venus:</label>
+      <input type="range" id="venus-speed" min="0.1" max="5" step="0.1" value="${venus_revolution_speed}">
+      <span class="speed-value">${venus_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="earth-speed">Earth:</label>
+      <input type="range" id="earth-speed" min="0.1" max="5" step="0.1" value="${earth_revolution_speed}">
+      <span class="speed-value">${earth_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="mars-speed">Mars:</label>
+      <input type="range" id="mars-speed" min="0.1" max="5" step="0.1" value="${mars_revolution_speed}">
+      <span class="speed-value">${mars_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="jupiter-speed">Jupiter:</label>
+      <input type="range" id="jupiter-speed" min="0.1" max="5" step="0.1" value="${jupiter_revolution_speed}">
+      <span class="speed-value">${jupiter_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="saturn-speed">Saturn:</label>
+      <input type="range" id="saturn-speed" min="0.1" max="5" step="0.1" value="${saturn_revolution_speed}">
+      <span class="speed-value">${saturn_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="uranus-speed">Uranus:</label>
+      <input type="range" id="uranus-speed" min="0.1" max="5" step="0.1" value="${uranus_revolution_speed}">
+      <span class="speed-value">${uranus_revolution_speed}x</span>
+    </div>
+    <div class="control-group">
+      <label for="neptune-speed">Neptune:</label>
+      <input type="range" id="neptune-speed" min="0.1" max="5" step="0.1" value="${neptune_revolution_speed}">
+      <span class="speed-value">${neptune_revolution_speed}x</span>
+    </div>
+    <button id="reset-speeds">Reset to Default</button>
+    <button id="toggle-panel">Hide Controls</button>
+  </div>
+`;
+
+// Add CSS for the control panel
+const panelStyle = document.createElement('style');
+panelStyle.textContent = `
+  .control-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+    max-width: 300px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .control-panel h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  
+  .control-group {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .control-group label {
+    flex: 1;
+    margin-right: 10px;
+    font-size: 0.9em;
+  }
+  
+  .control-group input[type="range"] {
+    flex: 2;
+    margin-right: 10px;
+  }
+  
+  .speed-value {
+    flex: 0.5;
+    text-align: right;
+    font-size: 0.9em;
+    color: #4fc3f7;
+  }
+  
+  #reset-speeds, #toggle-panel {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  #reset-speeds:hover, #toggle-panel:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  #reset-speeds {
+    margin-right: 5px;
+  }
+  
+  .control-panel.collapsed {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    padding: 0;
+  }
+  
+  .control-panel.collapsed > * {
+    display: none;
+  }
+  
+  .control-panel.collapsed #toggle-panel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  @media (max-width: 768px) {
+    .control-panel {
+      top: auto;
+      bottom: 10px;
+      right: 10px;
+      left: 10px;
+      max-width: none;
+    }
+  }
+`;
+
+document.head.appendChild(panelStyle);
+document.body.appendChild(controlPanel);
+
+// Add event listeners for the speed controls
+document.getElementById('mercury-speed').addEventListener('input', (e) => {
+  mercury_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#mercury-speed + .speed-value').textContent = `${mercury_revolution_speed}x`;
+});
+
+document.getElementById('venus-speed').addEventListener('input', (e) => {
+  venus_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#venus-speed + .speed-value').textContent = `${venus_revolution_speed}x`;
+});
+
+document.getElementById('earth-speed').addEventListener('input', (e) => {
+  earth_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#earth-speed + .speed-value').textContent = `${earth_revolution_speed}x`;
+});
+
+document.getElementById('mars-speed').addEventListener('input', (e) => {
+  mars_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#mars-speed + .speed-value').textContent = `${mars_revolution_speed}x`;
+});
+
+document.getElementById('jupiter-speed').addEventListener('input', (e) => {
+  jupiter_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#jupiter-speed + .speed-value').textContent = `${jupiter_revolution_speed}x`;
+});
+
+document.getElementById('saturn-speed').addEventListener('input', (e) => {
+  saturn_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#saturn-speed + .speed-value').textContent = `${saturn_revolution_speed}x`;
+});
+
+document.getElementById('uranus-speed').addEventListener('input', (e) => {
+  uranus_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#uranus-speed + .speed-value').textContent = `${uranus_revolution_speed}x`;
+});
+
+document.getElementById('neptune-speed').addEventListener('input', (e) => {
+  neptune_revolution_speed = parseFloat(e.target.value);
+  document.querySelector('#neptune-speed + .speed-value').textContent = `${neptune_revolution_speed}x`;
+});
+
+// Reset to default speeds
+document.getElementById('reset-speeds').addEventListener('click', () => {
+  mercury_revolution_speed = 2;
+  venus_revolution_speed = 1.5;
+  earth_revolution_speed = 1;
+  mars_revolution_speed = 0.8;
+  jupiter_revolution_speed = 0.7;
+  saturn_revolution_speed = 0.6;
+  uranus_revolution_speed = 0.5;
+  neptune_revolution_speed = 0.4;
+  
+  document.getElementById('mercury-speed').value = mercury_revolution_speed;
+  document.getElementById('venus-speed').value = venus_revolution_speed;
+  document.getElementById('earth-speed').value = earth_revolution_speed;
+  document.getElementById('mars-speed').value = mars_revolution_speed;
+  document.getElementById('jupiter-speed').value = jupiter_revolution_speed;
+  document.getElementById('saturn-speed').value = saturn_revolution_speed;
+  document.getElementById('uranus-speed').value = uranus_revolution_speed;
+  document.getElementById('neptune-speed').value = neptune_revolution_speed;
+  
+  document.querySelectorAll('.speed-value').forEach((span, index) => {
+    const speeds = [mercury_revolution_speed, venus_revolution_speed, earth_revolution_speed, 
+                   mars_revolution_speed, jupiter_revolution_speed, saturn_revolution_speed, 
+                   uranus_revolution_speed, neptune_revolution_speed];
+    span.textContent = `${speeds[index]}x`;
+  });
+});
+
+// Toggle panel visibility
+document.getElementById('toggle-panel').addEventListener('click', () => {
+  const panel = document.querySelector('.control-panel');
+  const button = document.getElementById('toggle-panel');
+  
+  if (panel.classList.contains('collapsed')) {
+    panel.classList.remove('collapsed');
+    button.textContent = 'Hide Controls';
+  } else {
+    panel.classList.add('collapsed');
+    button.textContent = '☰';
+  }
+});
 function init() {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
