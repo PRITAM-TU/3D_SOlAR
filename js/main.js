@@ -1,6 +1,14 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.129.0";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/controls/OrbitControls.js";
+const backgroundAudio = new Audio('milky-way-ambient-space-music-1395.mp3');
 
+// Set audio to loop
+backgroundAudio.loop = true;
+
+// Play the audio (note: many browsers require this to be triggered by user interaction)
+document.addEventListener('click', function() {
+  backgroundAudio.play().catch(e => console.log("Audio play failed:", e));
+}, { once: true }); // The { once: true } option makes this listener trigger only once
 // Loading screen elements
 const loadingScreen = document.createElement('div');
 loadingScreen.id = 'loading-screen';
@@ -13,6 +21,7 @@ loadingScreen.innerHTML = `
         </div>
     </div>
 `;
+
 
 // Add CSS for the loading screen
 const style = document.createElement('style');
